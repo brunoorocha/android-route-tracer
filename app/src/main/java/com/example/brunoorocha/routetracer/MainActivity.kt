@@ -3,6 +3,7 @@ package com.example.brunoorocha.routetracer
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
@@ -10,6 +11,7 @@ import android.support.v4.content.ContextCompat
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
 import android.support.v7.app.AlertDialog
+import android.view.View
 import android.widget.TextView
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -35,6 +37,12 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    fun didTapShowMapButton(button: View) {
+        val mapIntent = Intent(this, MapsActivity::class.java)
+
+        startActivity(mapIntent)
     }
 
     @SuppressLint("MissingPermission")
