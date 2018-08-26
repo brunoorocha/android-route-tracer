@@ -1,7 +1,10 @@
 package com.example.brunoorocha.routetracer
 
+import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import com.example.brunoorocha.routetracer.utils.EXTRA_DEVICE_POSITION_LATITUDE
+import com.example.brunoorocha.routetracer.utils.EXTRA_DEVICE_POSITION_LONGITUDE
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -13,10 +16,17 @@ import com.google.android.gms.maps.model.MarkerOptions
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
+    private lateinit var mCurrentLocation: LatLng
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
+
+        var latitude: Double = intent.getDoubleExtra(EXTRA_DEVICE_POSITION_LATITUDE, 0.0)
+        var longitude: Double = intent.getDoubleExtra(EXTRA_DEVICE_POSITION_LONGITUDE, 0.0)
+
+        this.mCurrentLocation = LatLng(latitude, longitude)
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
@@ -35,9 +45,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
 
-        // Add a marker in Sydney and move the camera
-        val sydney = LatLng(-34.0, 151.0)
-        mMap.addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        mMap.addMarker(MarkerOptions().position(this.mCurrentLocation).title("You are here!"))
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(this.mCurrentLocation))
     }
 }

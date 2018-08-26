@@ -6,20 +6,22 @@ import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.support.v7.app.AppCompatActivity
-import android.support.v4.content.ContextCompat
 import android.os.Bundle
 import android.support.v4.app.ActivityCompat
+import android.support.v4.content.ContextCompat
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.TextView
+import com.example.brunoorocha.routetracer.utils.EXTRA_DEVICE_POSITION_LATITUDE
+import com.example.brunoorocha.routetracer.utils.EXTRA_DEVICE_POSITION_LONGITUDE
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
-    private var mCurrentLocation: Location? = null
+    private lateinit var mCurrentLocation: Location
 
     @SuppressLint("MissingPermission")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,6 +34,7 @@ class MainActivity : AppCompatActivity() {
         if (checkLocationPermission()) {
             getLocation { location: Location? ->
                 if (location != null) {
+                    mCurrentLocation = location
                     latitudeTextView.text = String.format("Latitude: ${location.latitude}")
                     longitudeTextView.text = String.format("Latitude: ${location.longitude}")
                 }
@@ -40,9 +43,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun didTapShowMapButton(button: View) {
-        val mapIntent = Intent(this, MapsActivity::class.java)
+        callMapsActivityWithLocation(mCurrentLocation)
+    }
 
-        startActivity(mapIntent)
+    fun callMapsActivityWithLocation(location: Location) {
+        if (location != null) {
+            var mapIntent = Intent(this, MapsActivity::class.java).apply {
+                putExtra(EXTRA_DEVICE_POSITION_LATITUDE, location.latitude)
+                putExtra(EXTRA_DEVICE_POSITION_LONGITUDE, location.longitude)
+            }
+
+
+            startActivity(mapIntent)
+        }
     }
 
     @SuppressLint("MissingPermission")
