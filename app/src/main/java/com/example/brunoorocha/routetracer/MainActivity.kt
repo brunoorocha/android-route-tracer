@@ -13,8 +13,8 @@ import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatActivity
 import android.view.View
 import android.widget.TextView
-import com.example.brunoorocha.routetracer.utils.EXTRA_DEVICE_POSITION_LATITUDE
-import com.example.brunoorocha.routetracer.utils.EXTRA_DEVICE_POSITION_LONGITUDE
+import com.example.brunoorocha.routetracer.config.EXTRA_DEVICE_POSITION_LATITUDE
+import com.example.brunoorocha.routetracer.config.EXTRA_DEVICE_POSITION_LONGITUDE
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 

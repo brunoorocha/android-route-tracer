@@ -3,8 +3,9 @@ package com.example.brunoorocha.routetracer
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import com.example.brunoorocha.routetracer.utils.EXTRA_DEVICE_POSITION_LATITUDE
-import com.example.brunoorocha.routetracer.utils.EXTRA_DEVICE_POSITION_LONGITUDE
+import com.example.brunoorocha.routetracer.config.EXTRA_DEVICE_POSITION_LATITUDE
+import com.example.brunoorocha.routetracer.config.EXTRA_DEVICE_POSITION_LONGITUDE
+import com.example.brunoorocha.routetracer.provider.RTLocationProvider
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -23,11 +24,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_maps)
 
-        var latitude: Double = intent.getDoubleExtra(EXTRA_DEVICE_POSITION_LATITUDE, 0.0)
-        var longitude: Double = intent.getDoubleExtra(EXTRA_DEVICE_POSITION_LONGITUDE, 0.0)
-
-        this.mCurrentLocation = LatLng(latitude, longitude)
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
@@ -44,14 +40,25 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
      * installed Google Play services and returned to the app.
      */
     override fun onMapReady(googleMap: GoogleMap) {
-        mMap = googleMap
 
-        mMap.addMarker(MarkerOptions().position(this.mCurrentLocation).title("You are here!"))
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(this.mCurrentLocation))
+        RTLocationProvider.getLocation(this){ location: Location? ->
+            if (location != null) {
+                var latitude: Double = location.latitude
+                var longitude: Double = location.longitude
 
-        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
+                this.mCurrentLocation = LatLng(latitude, longitude)
 
-        mMap.setMaxZoomPreference(20.0f)
-        mMap.setMinZoomPreference(15.0f)
+                mMap = googleMap
+
+                mMap.addMarker(MarkerOptions().position(this.mCurrentLocation).title("You are here!"))
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(this.mCurrentLocation))
+
+                mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(this, R.raw.map_style))
+
+                mMap.setMaxZoomPreference(20.0f)
+                mMap.setMinZoomPreference(15.0f)
+            }
+        }
+
     }
 }
