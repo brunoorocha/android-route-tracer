@@ -1,11 +1,14 @@
 package com.example.brunoorocha.routetracer
 
+import android.content.Intent
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import com.example.brunoorocha.routetracer.config.EXTRA_DEVICE_POSITION_LATITUDE
 import com.example.brunoorocha.routetracer.config.EXTRA_DEVICE_POSITION_LONGITUDE
 import com.example.brunoorocha.routetracer.provider.RTLocationProvider
+import com.example.brunoorocha.routetracer.service.UpdatedLocationService
 
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -28,6 +31,22 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+    }
+
+    fun didTapOnCallServiceButton(view: View) {
+        startUpdatedLocationService()
+    }
+
+    private fun startUpdatedLocationService() {
+        val intent = Intent(this, UpdatedLocationService::class.java)
+
+        startService(intent)
+    }
+
+    private fun stopUpdatedLocationService() {
+        val intent = Intent(this, UpdatedLocationService::class.java)
+
+        stopService(intent)
     }
 
     /**
@@ -60,5 +79,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        stopUpdatedLocationService()
     }
 }
