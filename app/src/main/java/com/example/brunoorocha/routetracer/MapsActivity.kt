@@ -33,22 +33,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         mapFragment.getMapAsync(this)
     }
 
-    fun didTapOnCallServiceButton(view: View) {
-        startUpdatedLocationService()
-    }
-
-    private fun startUpdatedLocationService() {
-        val intent = Intent(this, UpdatedLocationService::class.java)
-
-        startService(intent)
-    }
-
-    private fun stopUpdatedLocationService() {
-        val intent = Intent(this, UpdatedLocationService::class.java)
-
-        stopService(intent)
-    }
-
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
@@ -79,6 +63,20 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             }
         }
 
+    }
+
+    fun didTapOnStartRunningButton(view: View) {
+        startUpdatedLocationService()
+    }
+
+    private fun startUpdatedLocationService() {
+        val intent = Intent(this, UpdatedLocationService::class.java)
+        startService(intent)
+    }
+
+    private fun stopUpdatedLocationService() {
+        val intent = Intent(this, UpdatedLocationService::class.java)
+        stopService(intent)
     }
 
     override fun onDestroy() {
