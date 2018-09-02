@@ -1,5 +1,6 @@
 package com.example.brunoorocha.routetracer
 
+import android.app.PendingIntent
 import android.content.Intent
 import android.location.Location
 import android.support.v7.app.AppCompatActivity
@@ -72,6 +73,11 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
     private fun startUpdatedLocationService() {
         val intent = Intent(this, UpdatedLocationService::class.java)
         startService(intent)
+
+    }
+
+    private fun getPendingIntent(intent: Intent): PendingIntent {
+        return PendingIntent.getService(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
     }
 
     private fun stopUpdatedLocationService() {
