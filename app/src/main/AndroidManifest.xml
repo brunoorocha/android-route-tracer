@@ -39,7 +39,13 @@
         <service
             android:name=".service.UpdatedLocationService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
+
+        <provider
+            android:name=".provider.LocationContentProvider"
+            android:authorities="com.example.brunoorocha.routetracer.location"
+            android:enabled="true"
+            android:exported="true"></provider>
     </application>
 
 </manifest>

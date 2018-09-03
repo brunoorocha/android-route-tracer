@@ -2,14 +2,14 @@ package com.example.brunoorocha.routetracer
 
 import android.content.Intent
 import android.location.Location
-import android.support.v7.app.AppCompatActivity
+import android.net.Uri
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
-import com.example.brunoorocha.routetracer.config.EXTRA_DEVICE_POSITION_LATITUDE
-import com.example.brunoorocha.routetracer.config.EXTRA_DEVICE_POSITION_LONGITUDE
+import com.example.brunoorocha.routetracer.provider.LocationContract
 import com.example.brunoorocha.routetracer.provider.RTLocationProvider
 import com.example.brunoorocha.routetracer.service.UpdatedLocationService
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -31,6 +31,23 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val mapFragment = supportFragmentManager
                 .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        showAllLocationsOnDatabase()
+    }
+
+    private fun showAllLocationsOnDatabase() {
+        val uri = Uri.parse("content://" + LocationContract.CONTENT_AUTHORITY + "/location")
+        val cursor = contentResolver.query(uri, null, null, null, "timestamp")
+
+        if (cursor.moveToFirst()) {
+            do {
+                val description = "_ID: " + cursor.getString(cursor.getColumnIndex(LocationContract.LocationEntry._ID)) +
+                        " | LATITUDE: " + cursor.getString(cursor.getColumnIndex(LocationContract.LocationEntry.COLUMN_LATITUDE)) +
+                        " | LONGITUDE: " + cursor.getString(cursor.getColumnIndex(LocationContract.LocationEntry.COLUMN_LONGITUDE))
+
+                Log.i("DB_RESULT", description)
+            } while (cursor.moveToNext())
+        }
     }
 
     fun didTapOnCallServiceButton(view: View) {

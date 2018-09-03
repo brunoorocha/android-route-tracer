@@ -2,12 +2,14 @@ package com.example.brunoorocha.routetracer.service
 
 import android.annotation.SuppressLint
 import android.app.Service
+import android.content.ContentValues
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.IBinder
 import android.support.v4.app.ActivityCompat
 import android.util.Log
+import com.example.brunoorocha.routetracer.provider.LocationContract
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 
@@ -34,6 +36,7 @@ class UpdatedLocationService : Service() {
                 for (location in locationResult.locations){
                     if (location != null) {
                         Log.i(TAG, location.toString())
+                        saveLocationOnContentProvider(location)
                     }
                 }
             }
@@ -43,6 +46,18 @@ class UpdatedLocationService : Service() {
         startLocationUpdates()
 
         return super.onStartCommand(intent, flags, startId)
+    }
+
+    private fun saveLocationOnContentProvider(location: Location?) {
+        if (location != null) {
+
+            val contentValues = ContentValues().apply {
+                put(LocationContract.LocationEntry.COLUMN_LATITUDE, location.latitude)
+                put(LocationContract.LocationEntry.COLUMN_LONGITUDE, location.longitude)
+            }
+
+            contentResolver.insert(LocationContract.BASE_CONTENT_URI, contentValues)
+        }
     }
 
     @SuppressLint("MissingPermission")
