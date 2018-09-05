@@ -8,10 +8,12 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.IBinder
 import android.support.v4.app.ActivityCompat
+import android.text.format.DateFormat
 import android.util.Log
 import com.example.brunoorocha.routetracer.provider.LocationContract
 import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
+import java.util.*
 
 class UpdatedLocationService : Service() {
 
@@ -54,6 +56,7 @@ class UpdatedLocationService : Service() {
             val contentValues = ContentValues().apply {
                 put(LocationContract.LocationEntry.COLUMN_LATITUDE, location.latitude)
                 put(LocationContract.LocationEntry.COLUMN_LONGITUDE, location.longitude)
+                put(LocationContract.LocationEntry.COLUMN_TIMESTAMP, DateFormat.format("yyyy-MM-dd hh:mm:ss", Date()).toString())
             }
 
             contentResolver.insert(LocationContract.BASE_CONTENT_URI, contentValues)
@@ -75,8 +78,8 @@ class UpdatedLocationService : Service() {
     fun createLocationRequest() {
 
         this.locationRequest = LocationRequest().apply {
-            interval = 10000
-            fastestInterval = 5000
+            interval = 30000
+            fastestInterval = 15000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
 

@@ -45,7 +45,17 @@
             android:name=".provider.LocationContentProvider"
             android:authorities="com.example.brunoorocha.routetracer.location"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="true" />
+
+        <receiver
+            android:name=".receiver.LocationReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <!--<intent-filter>-->
+                <!--<action android:name="com.example.brunoorocha.routetracer.EXTRA_FETCH_LOCATION" />-->
+                <!--<category android:name="android.intent.category.DEFAULT" />-->
+            <!--</intent-filter>-->
+        </receiver>
     </application>
 
 </manifest>
