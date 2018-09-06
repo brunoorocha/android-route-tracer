@@ -26,6 +26,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PolylineOptions
 import java.util.*
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationHandlerDelegate {
@@ -169,6 +170,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationHandlerDel
         this.mMap.moveCamera(CameraUpdateFactory.newLatLng(this.mCurrentLocation))
 
         val locations = getLocationPoints()
+
+        this.mMap.addPolyline(PolylineOptions().addAll(locations))
         Log.i("LOCATIONS", locations.count().toString())
     }
 
