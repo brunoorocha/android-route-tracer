@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
+import android.graphics.Color
 import android.location.Location
 import android.net.Uri
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.support.v7.app.AppCompatActivity
 import android.text.format.DateFormat
 import android.util.Log
 import android.view.View
+import android.widget.Button
 import com.example.brunoorocha.routetracer.config.EXTRA_FETCH_LOCATION
 import com.example.brunoorocha.routetracer.interfaces.LocationHandlerDelegate
 import com.example.brunoorocha.routetracer.provider.LocationContract
@@ -36,6 +38,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationHandlerDel
     private lateinit var alarmManager: AlarmManager
     private lateinit var marker: MarkerOptions
     private lateinit var startTimeStamp: String
+    private var isRunning = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -87,11 +90,27 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationHandlerDel
         return locations
     }
 
-    fun didTapOnCallServiceButton(view: View) {
-        this.startTimeStamp = DateFormat.format("yyyy-MM-dd hh:mm:ss", Date()).toString()
+    fun didTapOnStartStopRunningButton(view: View) {
 
-        startUpdatedLocationService()
-        createALocationReceiver()
+        val runningButton = findViewById<Button>(R.id.runningButton)
+
+        if (isRunning) {
+            runningButton.text = "Start Running"
+            isRunning = false
+
+            this.startTimeStamp = ""
+            stopAlarmManager()
+            stopUpdatedLocationService()
+        }
+        else {
+            runningButton.text = "Stop Running"
+            isRunning = true
+
+            this.startTimeStamp = DateFormat.format("yyyy-MM-dd hh:mm:ss", Date()).toString()
+            setAlarmManager()
+            startUpdatedLocationService()
+            createALocationReceiver()
+        }
     }
 
     private fun startUpdatedLocationService() {
@@ -133,7 +152,6 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationHandlerDel
                 this.mMap.setMaxZoomPreference(20.0f)
                 this.mMap.setMinZoomPreference(15.0f)
 
-                setAlarmManager()
             }
         }
 
@@ -171,7 +189,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback, LocationHandlerDel
 
         val locations = getLocationPoints()
 
-        this.mMap.addPolyline(PolylineOptions().addAll(locations))
+        this.mMap.addPolyline(PolylineOptions().addAll(locations).color(Color.YELLOW))
         Log.i("LOCATIONS", locations.count().toString())
     }
 
